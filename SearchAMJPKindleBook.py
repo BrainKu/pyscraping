@@ -46,7 +46,7 @@ def check_is_author(result, author):
     return False
 
 
-def check_mark_book_by_prices(prices):
+def need_mark_book_by_prices(prices):
     for price_percent in filter(lambda price: "%" in price.text, prices):
         percent = re.findall(r'\d+', price_percent.text)
         if len(percent) > 0 and int(percent[0]) >= min_percent:
@@ -65,9 +65,6 @@ def read_current_page(webdriver, page, key, file, check_title=True, check_author
     not_about = []
     for result in results:
         if result is not None:
-            if debug:
-                file.write("id:{}".format(result.get_attribute("id")))
-                print("id:{}".format(result.get_attribute("id")) + "\n")
             book_name = result.find_element_by_tag_name("h2")
             if check_title and key not in book_name.text:
                 not_about.append(book_name.text)
@@ -80,7 +77,7 @@ def read_current_page(webdriver, page, key, file, check_title=True, check_author
                     raise FileExistsError("key not found!")
                 continue
             prices = result.find_elements_by_class_name("a-color-price")
-            mark_book = check_mark_book_by_prices(prices)
+            mark_book = need_mark_book_by_prices(prices)
             link = result.find_element_by_class_name("s-access-detail-page").get_attribute("href")
             print("book name:" + book_name.text)
             print(" ".join([price.text for price in prices]))
