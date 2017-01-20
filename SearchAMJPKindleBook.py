@@ -21,7 +21,7 @@ search_author = ["桜庭 一樹", "小林 泰三", "米澤 穂信"]
 mark_books = []
 search_page = 4
 min_percent = 30
-min_price = 350
+max_price = 350
 
 
 def get_current_time():
@@ -53,7 +53,7 @@ def need_mark_book_by_prices(prices):
             return True
     for real_price in filter(lambda price: "￥" in price.text, prices):
         r_price = re.findall(r'\d+', real_price.text.replace(",", ""))
-        if len(r_price) > 0 and int(r_price[0]) <= min_price:
+        if len(r_price) > 0 and int(r_price[0]) <= max_price:
             return True
     return False
 
